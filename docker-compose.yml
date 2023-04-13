@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+    app:
+        build:
+            args:
+                user: admin
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        container_name: crud-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - crud
+
+    db:
+        image: mysql:8.0
+        container_name: crud-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        ports:
+                - "3306:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - crud
+
+    nginx:
+        image: nginx:alpine
+        container_name: crud-nginx
+        restart: unless-stopped
+        ports:
+            - "8085:8085"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx:/etc/nginx/conf.d/
+        networks:
+            - crud
+
+volumes:
+    db_data: {}
+
+networks:
+    crud:
+        driver: bridge
