@@ -1,3 +1,22 @@
+## Info
+
+``host: http://localhost:8085``
+
+Endpoints:
+
+```
+Public:
+POST /api/register
+POST /api/login
+GET|HEAD    /api/users
+GET|HEAD    /api/users/{id}
+
+With bearer token:
+POST        /api/logout
+PUT|PATCH   /api/users/{id}
+DELETE      /api/users/{id}
+```
+
 ## Installation manual
 
 ``cp .env.example .env``
